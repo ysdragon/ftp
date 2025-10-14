@@ -28,7 +28,7 @@ aPackageInfo = [
 		"examples/01_basic_upload_download.ring",
 		"LICENSE",
 		"README.md",
-		"src/c_src/ftp_client.h",
+		"src/c_src/ftpclient.h",
 		"src/c_src/ring_ftp.c",
 		"src/ftp.rh",
 		"src/ftp.ring",
