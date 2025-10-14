@@ -1,0 +1,33 @@
+# Load the Ring FTP library based on the operating system.
+if isWindows()
+	loadlib("ring_ftp.dll")
+but isLinux() or isFreeBSD()
+	loadlib("libring_ftp.so")
+but isMacOSX()
+	loadlib("libring_ftp.dylib")
+else
+	raise("Unsupported OS! You need to build the library for your OS.")
+ok
+
+# FTP Error Codes
+FTP_OK = get_ftp_ok()
+FTP_ERROR_INIT = get_ftp_error_init()
+FTP_ERROR_CONNECTION = get_ftp_error_connection()
+FTP_ERROR_AUTH = get_ftp_error_auth()
+FTP_ERROR_TRANSFER = get_ftp_error_transfer()
+FTP_ERROR_FILE_NOT_FOUND = get_ftp_error_file_not_found()
+FTP_ERROR_MEMORY = get_ftp_error_memory()
+FTP_ERROR_INVALID_PARAM = get_ftp_error_invalid_param()
+FTP_ERROR_CURL = get_ftp_error_curl()
+FTP_ERROR_FILE_IO = get_ftp_error_file_io()
+FTP_ERROR_TIMEOUT = get_ftp_error_timeout()
+
+# Transfer Mode
+FTP_MODE_PASSIVE = get_ftp_mode_passive()
+FTP_MODE_ACTIVE = get_ftp_mode_active()
+
+# SSL/TLS Options
+FTP_SSL_NONE = get_ftp_ssl_none()
+FTP_SSL_TRY = get_ftp_ssl_try()
+FTP_SSL_CONTROL = get_ftp_ssl_control()
+FTP_SSL_ALL = get_ftp_ssl_all()
