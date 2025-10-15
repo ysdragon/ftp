@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 project(RingFTPClient LANGUAGES C)
 
+include(FetchContent)
+
 set(RING_ROOT_DEFAULT "${CMAKE_CURRENT_SOURCE_DIR}/../..")
 if(DEFINED ENV{RING})
     set(RING_ROOT_DEFAULT "$ENV{RING}")
@@ -67,8 +69,25 @@ endif()
 # Set the destination directory for the built library
 set(LIB_DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/${OS_DIR}/${ARCH_DIR}")
 
-# Find CURL package
+# Find libcurl
 find_package(CURL REQUIRED)
+
+# Don't build examples from ftpclient
+set(BUILD_EXAMPLES OFF)
+
+# Add ftpclient.h as a subdirectory to build it
+if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/ftpclient/CMakeLists.txt")
+    message(STATUS "ftpclient.h source not found, fetching from GitHub...")
+    FetchContent_Declare(
+        ftpclient
+        GIT_REPOSITORY https://github.com/ysdragon/ftpclient.h
+        GIT_TAG        v1.0.0
+    )
+    FetchContent_MakeAvailable(ftpclient)
+else()
+    message(STATUS "ftpclient.h found locally, adding as subdirectory.")
+    add_subdirectory(src/c_src/ftpclient)
+endif()
 
 # Create the Ring FTP Client extension shared library
 add_library(ring_ftp SHARED
@@ -78,25 +97,14 @@ add_library(ring_ftp SHARED
 # Include directories
 target_include_directories(ring_ftp PRIVATE
 	${RING_INCLUDE}
-	${CMAKE_CURRENT_SOURCE_DIR}
-	${CURL_INCLUDE_DIRS}
+    ${CURL_INCLUDE_DIRS}
 )
 
 # Link libraries
 target_link_libraries(ring_ftp PRIVATE
 	Ring::Ring
-	CURL::libcurl
+    ftpclient
 )
-
-# On Windows, link additional dependencies required for static CURL
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	target_link_libraries(ring_ftp PRIVATE
-		ws2_32
-		wldap32
-		crypt32
-		normaliz
-	)
-endif()
 
 target_compile_options(ring_ftp PRIVATE
     $<$<CONFIG:Release,RelWithDebInfo,MinSizeRel>:
