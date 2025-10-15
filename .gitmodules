@@ -1,0 +1,3 @@
+[submodule "src/c_src/ftpclient"]
+	path = src/c_src/ftpclient
+	url = https://github.com/ysdragon/ftpclient.h
