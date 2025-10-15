@@ -47,17 +47,17 @@ To connect to an FTP server and upload a file:
 ftp = new FTP()
 
 try
-    ftp {
-        setHost("ftp.example.com", 21)
-        setCredentials("username", "password")
-        connect()
-        upload("local_file.txt", "remote_file.txt")
-        close()
-    }
-    ? "Upload successful!"
-    
+	ftp {
+		setHost("ftp.example.com", 21)
+		setCredentials("username", "password")
+		connect()
+		upload("local_file.txt", "remote_file.txt")
+		close()
+	}
+	? "Upload successful!"
+	
 catch
-    ? "Error: " + ftp.getError()
+	? "Error: " + ftp.getError()
 end
 ```
 
@@ -69,17 +69,17 @@ To download a file from an FTP server:
 ftp = new FTP()
 
 try
-    ftp {
-        setHost("ftp.example.com", 21)
-        setCredentials("username", "password")
-        connect()
-        download("remote_file.txt", "local_file.txt")
-        close()
-    }
-    ? "Download complete!"
-    
+	ftp {
+		setHost("ftp.example.com", 21)
+		setCredentials("username", "password")
+		connect()
+		download("remote_file.txt", "local_file.txt")
+		close()
+	}
+	? "Download complete!"
+	
 catch
-    ? "Error: " + ftp.getError()
+	? "Error: " + ftp.getError()
 end
 ```
 
@@ -89,36 +89,36 @@ end
 ftp = new FTP()
 
 try
-    ftp {
-        setHost("ftp.example.com", 21)
-        setCredentials("username", "password")
-        connect()
-        
-        # List directory contents
-        listing = listDir("/")
-        ? listing
-        
-        # Create a directory
-        mkdir("new_folder")
-        
-        # Remove a directory
-        rmdir("old_folder")
-        
-        # Delete a file
-        delete("unwanted_file.txt")
-        
-        # Rename a file
-        rename("old_name.txt", "new_name.txt")
-        
-        # Get file size
-        size = getFileSize("remote_file.txt")
-        ? "File size: " + size + " bytes"
-        
-        close()
-    }
-    
+	ftp {
+		setHost("ftp.example.com", 21)
+		setCredentials("username", "password")
+		connect()
+		
+		# List directory contents
+		listing = listDir("/")
+		? listing
+		
+		# Create a directory
+		mkdir("new_folder")
+		
+		# Remove a directory
+		rmdir("old_folder")
+		
+		# Delete a file
+		delete("unwanted_file.txt")
+		
+		# Rename a file
+		rename("old_name.txt", "new_name.txt")
+		
+		# Get file size
+		size = getFileSize("remote_file.txt")
+		? "File size: " + size + " bytes"
+		
+		close()
+	}
+	
 catch
-    ? "Error: " + ftp.getError()
+	? "Error: " + ftp.getError()
 end
 ```
 
@@ -130,28 +130,28 @@ Track upload/download progress with callbacks:
 ftp = new FTP()
 
 try
-    ftp {
-        setHost("ftp.example.com", 21)
-        setCredentials("username", "password")
-        setProgressCallback(:myProgressCallback)
-        connect()
-        upload("large_file.zip", "large_file.zip")
-        close()
-    }
-    
+	ftp {
+		setHost("ftp.example.com", 21)
+		setCredentials("username", "password")
+		setProgressCallback(:myProgressCallback)
+		connect()
+		upload("large_file.zip", "large_file.zip")
+		close()
+	}
+	
 catch
-    ? "Error: " + ftp.getError()
+	? "Error: " + ftp.getError()
 end
 
 func myProgressCallback(download_total, download_now, upload_total, upload_now)
-    if upload_total > 0
-        percent = (upload_now / upload_total) * 100
-        ? "Upload Progress: " + percent + "%"
-    ok
-    if download_total > 0
-        percent = (download_now / download_total) * 100
-        ? "Download Progress: " + percent + "%"
-    ok
+	if upload_total > 0
+		percent = (upload_now / upload_total) * 100
+		? "Upload Progress: " + percent + "%"
+	ok
+	if download_total > 0
+		percent = (download_now / download_total) * 100
+		? "Download Progress: " + percent + "%"
+	ok
 ```
 
 ### Advanced Configuration
@@ -160,33 +160,33 @@ func myProgressCallback(download_total, download_now, upload_total, upload_now)
 ftp = new FTP()
 
 try
-    ftp {
-        setHost("ftp.example.com", 21)
-        setCredentials("username", "password")
-        
-        # Set passive mode (default)
-        setMode(FTP_MODE_PASSIVE)
-        
-        # Enable SSL/TLS for secure transfers
-        setSSL(FTP_SSL_ALL, 1)  # Verify SSL certificate
-        
-        # Set timeouts (transfer timeout, connection timeout in seconds)
-        setTimeout(60, 30)
-        
-        # Enable verbose debugging output
-        setVerbose(1)
-        
-        connect()
-        
-        # Execute custom FTP command
-        response = executeCommand("PWD")
-        ? "Current directory: " + response
-        
-        close()
-    }
-    
+	ftp {
+		setHost("ftp.example.com", 21)
+		setCredentials("username", "password")
+		
+		# Set passive mode (default)
+		setMode(FTP_MODE_PASSIVE)
+		
+		# Enable SSL/TLS for secure transfers
+		setSSL(FTP_SSL_ALL, 1)  # Verify SSL certificate
+		
+		# Set timeouts (transfer timeout, connection timeout in seconds)
+		setTimeout(60, 30)
+		
+		# Enable verbose debugging output
+		setVerbose(1)
+		
+		connect()
+		
+		# Execute custom FTP command
+		response = executeCommand("PWD")
+		? "Current directory: " + response
+		
+		close()
+	}
+	
 catch
-    ? "Error: " + ftp.getError()
+	? "Error: " + ftp.getError()
 end
 ```
 
@@ -309,7 +309,7 @@ Sets a function to track transfer progress.
 ftp.setProgressCallback(:myProgressCallback)
 
 func myProgressCallback(download_total, download_now, upload_total, upload_now)
-    # Your progress handling code
+	# Your progress handling code
 ```
 
 ##### `clearProgressCallback()`
@@ -499,42 +499,44 @@ If you wish to contribute to the development of Ring FTP or build it from the so
 ### Build Steps
 
 1.  **Clone the Repository:**
-    ```sh
-    git clone https://github.com/ysdragon/ftp.git
-    ```
-    > **Note**: If you installed the library via RingPM, you can skip this step.
+	```sh
+	git clone https://github.com/ysdragon/ftp.git --recursive
+	```
+
+	> **Note**
+	> If you installed the library via RingPM, you can skip this step.
 
 2.  **Set the `RING` Environment Variable:**
-    This variable must point to the root directory of the Ring language source code.
+	This variable must point to the root directory of the Ring language source code.
 
-    -   **Windows (Command Prompt):**
-        ```cmd
-        set RING=X:\path\to\ring
-        ```
-    -   **Windows (PowerShell):**
-        ```powershell
-        $env:RING = "X:\path\to\ring"
-        ```
-    -   **Unix-like Systems (Linux, macOS or FreeBSD):**
-        ```bash
-        export RING=/path/to/ring
-        ```
+	-   **Windows (Command Prompt):**
+		```cmd
+		set RING=X:\path\to\ring
+		```
+	-   **Windows (PowerShell):**
+		```powershell
+		$env:RING = "X:\path\to\ring"
+		```
+	-   **Unix-like Systems (Linux, macOS or FreeBSD):**
+		```bash
+		export RING=/path/to/ring
+		```
 
 3.  **Configure with CMake:**
-    Create a build directory and run CMake from within it.
-    ```sh
-    mkdir build
-    cd build
-    cmake ..
-    ```
+	Create a build directory and run CMake from within it.
+	```sh
+	mkdir build
+	cd build
+	cmake ..
+	```
 
 4.  **Build the Project:**
-    Compile the source code using the build toolchain configured by CMake.
-    ```sh
-    cmake --build .
-    ```
+	Compile the source code using the build toolchain configured by CMake.
+	```sh
+	cmake --build .
+	```
 
-    The compiled library will be available in the `lib/<os>/<arch>` directory.
+	The compiled library will be available in the `lib/<os>/<arch>` directory.
 
 ## 🤝 Contributing
 
