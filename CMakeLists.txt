@@ -81,7 +81,7 @@ if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/ftpclient/CMakeLists.txt")
     FetchContent_Declare(
         ftpclient
         GIT_REPOSITORY https://github.com/ysdragon/ftpclient.h
-        GIT_TAG        v1.0.0
+        GIT_TAG        master
     )
     FetchContent_MakeAvailable(ftpclient)
 else()
