@@ -9,7 +9,7 @@ on:
     - '**/CMakeLists.txt'
     - '.github/workflows/**'
     - '.gitmodules'
-    - 'src/md4c/**'
+    - 'src/c_src/ftpclient/**'
   pull_request:
     paths:
     - '**.c'
@@ -17,7 +17,7 @@ on:
     - '**/CMakeLists.txt'
     - '.github/workflows/**'
     - '.gitmodules'
-    - 'src/md4c/**'
+    - 'src/c_src/ftpclient/**'
     
 jobs:
   freebsd:
