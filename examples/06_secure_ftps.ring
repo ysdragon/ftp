@@ -36,17 +36,17 @@ try
 
 		# Upload file securely
 		? "Uploading file via FTPS..."
-		upload("secure_test.txt", "secure_uploaded.txt")
+		upload("secure_test.txt", "/secure_uploaded.txt")
 		? "✓ File uploaded securely!" + nl
 		
 		# Download file securely
 		? "Downloading file via FTPS..."
-		download("secure_uploaded.txt", "secure_downloaded.txt")
+		download("/secure_uploaded.txt", "secure_downloaded.txt")
 		? "✓ File downloaded securely!" + nl
 		
 		# Clean up
 		? "Cleaning up..."
-		delete("secure_uploaded.txt")
+		delete("/secure_uploaded.txt")
 		? "✓ Remote file deleted" + nl
 		
 		# Close the connection

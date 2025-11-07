@@ -20,7 +20,7 @@ try
 		
 		# Create a directory for batch upload
 		? "Creating 'batch_upload' directory..."
-		mkdir("batch_upload")
+		mkdir("/batch_upload")
 		? "✓ Directory created!" + nl
 
 		# Create multiple test files
@@ -37,21 +37,21 @@ try
 		? "Uploading files..." + nl
 		for i = 1 to len(files)
 			? "Uploading " + files[i] + "..."
-			upload(files[i], "batch_upload/" + files[i])
+			upload(files[i], "/batch_upload/" + files[i])
 			? "  ✓ " + files[i] + " uploaded successfully!"
 		next
 		? nl
 		
 		# Verify uploads by listing directory
 		? "Verifying uploads..."
-		listing = listDir("batch_upload")
+		listing = listDir("/batch_upload")
 		? "Files in 'batch_upload':" + nl + listing + nl
 		
 		# Get total size of uploaded files
 		? "Calculating total uploaded size..."
 		totalSize = 0
 		for i = 1 to len(files)
-			size = getFileSize("batch_upload/" + files[i])
+			size = getFileSize("/batch_upload/" + files[i])
 			totalSize += size
 			? "  " + files[i] + ": " + size + " bytes"
 		next
@@ -60,9 +60,9 @@ try
 		# Clean up - delete all uploaded files
 		? "Cleaning up remote files..."
 		for i = 1 to len(files)
-			delete("batch_upload/" + files[i])
+			delete("/batch_upload/" + files[i])
 		next
-		rmdir("batch_upload")
+		rmdir("/batch_upload")
 		? "✓ Cleanup complete!" + nl
 		
 		# Close the connection

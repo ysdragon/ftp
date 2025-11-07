@@ -26,27 +26,27 @@ try
 		
 		# Create a new directory
 		? "Creating directory 'test_folder'..."
-		mkdir("test_folder")
+		mkdir("/test_folder")
 		? "✓ Directory created!" + nl
 		
 		# Create a nested directory structure
 		? "Creating nested directory 'test_folder/subfolder'..."
-		mkdir("test_folder/subfolder")
+		mkdir("/test_folder/subfolder")
 		? "✓ Nested directory created!" + nl
 		
 		# List the test_folder to verify
 		? "Listing 'test_folder' contents:"
-		listing = listDir("test_folder")
+		listing = listDir("/test_folder")
 		? listing + nl
 		
 		# Remove the nested directory
 		? "Removing 'test_folder/subfolder'..."
-		rmdir("test_folder/subfolder")
+		rmdir("/test_folder/subfolder")
 		? "✓ Subdirectory removed!" + nl
 		
 		# Remove the main directory
 		? "Removing 'test_folder'..."
-		rmdir("test_folder")
+		rmdir("/test_folder")
 		? "✓ Directory removed!" + nl
 		
 		# Close the connection

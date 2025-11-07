@@ -99,19 +99,19 @@ try
 		? listing
 		
 		# Create a directory
-		mkdir("new_folder")
+		mkdir("/new_folder")
 		
 		# Remove a directory
-		rmdir("old_folder")
+		rmdir("/old_folder")
 		
 		# Delete a file
-		delete("unwanted_file.txt")
+		delete("/unwanted_file.txt")
 		
 		# Rename a file
-		rename("old_name.txt", "new_name.txt")
+		rename("/old_name.txt", "/new_name.txt")
 		
 		# Get file size
-		size = getFileSize("remote_file.txt")
+		size = getFileSize("/remote_file.txt")
 		? "File size: " + size + " bytes"
 		
 		close()
@@ -340,7 +340,7 @@ Uploads a local file to the remote server.
 
 **Example:**
 ```ring
-ftp.upload("local.txt", "remote.txt")
+ftp.upload("local.txt", "/remote.txt")
 ```
 
 ##### `download(remotePath, localPath)`
@@ -354,7 +354,7 @@ Downloads a remote file to a local path.
 
 **Example:**
 ```ring
-ftp.download("remote.txt", "local.txt")
+ftp.download("/remote.txt", "local.txt")
 ```
 
 ##### `listDir(remotePath)`
@@ -381,7 +381,7 @@ Creates a directory on the remote server.
 
 **Example:**
 ```ring
-ftp.mkdir("new_folder")
+ftp.mkdir("/new_folder")
 ```
 
 ##### `rmdir(remotePath)`
@@ -394,7 +394,7 @@ Removes a directory from the remote server.
 
 **Example:**
 ```ring
-ftp.rmdir("old_folder")
+ftp.rmdir("/old_folder")
 ```
 
 ##### `delete(remotePath)`
@@ -407,7 +407,7 @@ Deletes a file from the remote server.
 
 **Example:**
 ```ring
-ftp.delete("unwanted.txt")
+ftp.delete("/unwanted.txt")
 ```
 
 ##### `rename(oldPath, newPath)`
@@ -421,7 +421,7 @@ Renames a file or directory on the remote server.
 
 **Example:**
 ```ring
-ftp.rename("old.txt", "new.txt")
+ftp.rename("/old.txt", "/new.txt")
 ```
 
 ##### `getFileSize(remotePath)`
@@ -434,7 +434,7 @@ Gets the size of a remote file in bytes.
 
 **Example:**
 ```ring
-size = ftp.getFileSize("file.txt")
+size = ftp.getFileSize("/file.txt")
 ```
 
 ##### `executeCommand(command)`

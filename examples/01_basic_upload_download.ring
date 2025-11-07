@@ -29,17 +29,17 @@ try
 
 		# Upload the file
 		? "Uploading file to FTP server..."
-		upload("test_file.txt", "uploaded_file.txt")
+		upload("test_file.txt", "/uploaded_file.txt")
 		? "✓ Upload complete!" + nl
 		
 		# Get the uploaded file size
 		? "Checking uploaded file size..."
-		fileSize = getFileSize("uploaded_file.txt")
+		fileSize = getFileSize("/uploaded_file.txt")
 		? "File size: " + fileSize + " bytes" + nl
 		
 		# Download the file back
 		? "Downloading file from FTP server..."
-		download("uploaded_file.txt", "downloaded_file.txt")
+		download("/uploaded_file.txt", "downloaded_file.txt")
 		? "✓ Download complete!" + nl
 		
 		# Close the connection

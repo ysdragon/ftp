@@ -26,36 +26,36 @@ try
 
 		# Upload multiple files
 		? "Uploading files..."
-		upload("file1.txt", "file1.txt")
+		upload("file1.txt", "/file1.txt")
 		? "✓ Uploaded file1.txt"
 		
-		upload("file2.txt", "file2.txt")
+		upload("file2.txt", "/file2.txt")
 		? "✓ Uploaded file2.txt" + nl
 		
 		# Check file sizes
 		? "Checking file sizes..."
-		size1 = getFileSize("file1.txt")
+		size1 = getFileSize("/file1.txt")
 		? "file1.txt: " + size1 + " bytes"
 		
-		size2 = getFileSize("file2.txt")
+		size2 = getFileSize("/file2.txt")
 		? "file2.txt: " + size2 + " bytes" + nl
 		
 		# Rename a file
 		? "Renaming file1.txt to renamed_file.txt..."
-		rename("file1.txt", "renamed_file.txt")
+		rename("/file1.txt", "/renamed_file.txt")
 		? "✓ File renamed!" + nl
 		
 		# Verify the renamed file exists
 		? "Checking renamed file size..."
-		renamedSize = getFileSize("renamed_file.txt")
+		renamedSize = getFileSize("/renamed_file.txt")
 		? "renamed_file.txt: " + renamedSize + " bytes" + nl
 		
 		# Delete files
 		? "Deleting files..."
-		delete("renamed_file.txt")
+		delete("/renamed_file.txt")
 		? "✓ Deleted renamed_file.txt"
 		
-		delete("file2.txt")
+		delete("/file2.txt")
 		? "✓ Deleted file2.txt" + nl
 		
 		# Close the connection

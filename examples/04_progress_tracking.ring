@@ -30,17 +30,17 @@ try
 
 		# Upload with progress tracking
 		? "Uploading file with progress tracking..."
-		upload("large_test_file.txt", "uploaded_large_file.txt")
+		upload("large_test_file.txt", "/uploaded_large_file.txt")
 		? nl + "✓ Upload complete!" + nl
 		
 		# Download with progress tracking
 		? "Downloading file with progress tracking..."
-		download("uploaded_large_file.txt", "downloaded_large_file.txt")
+		download("/uploaded_large_file.txt", "downloaded_large_file.txt")
 		? nl + "✓ Download complete!" + nl
 		
 		# Clean up remote file
 		? "Cleaning up..."
-		delete("uploaded_large_file.txt")
+		delete("/uploaded_large_file.txt")
 		? "✓ Remote file deleted" + nl
 		
 		# Close the connection
