@@ -9,7 +9,7 @@ on:
     - '**/CMakeLists.txt'
     - '.github/workflows/**'
     - '.gitmodules'
-    - 'src/c_src/ftpclient'
+    - 'src/c_src/**'
   pull_request:
     paths:
     - '**.c'
@@ -17,34 +17,32 @@ on:
     - '**/CMakeLists.txt'
     - '.github/workflows/**'
     - '.gitmodules'
-    - 'src/c_src/ftpclient'
-  workflow_dispatch:
-    
+    - 'src/c_src/**'
 jobs:
   alpine:
     uses: ./.github/workflows/alpine_build.yml
     with:
-      ring-version: v1.24
+      ring-version: master
 
   freebsd:
     uses: ./.github/workflows/freebsd_build.yml
     with:
-      ring-version: v1.24
+      ring-version: master
 
   macos:
     uses: ./.github/workflows/macos_build.yml
     with:
-      ring-version: v1.24
+      ring-version: master
 
   ubuntu:
     uses: ./.github/workflows/ubuntu_build.yml
     with:
-      ring-version: v1.24
+      ring-version: master
 
   windows:
     uses: ./.github/workflows/windows_build.yml
     with:
-      ring-version: v1.24
+      ring-version: master
 
   update-libs:
     runs-on: ubuntu-latest
@@ -66,11 +64,17 @@ jobs:
     - name: Copy artifacts to lib directory
       run: |
         mkdir -p lib
+        echo "=== Artifacts structure ==="
+        find artifacts -type f
+        echo "=== Copying artifacts ==="
         for artifact_dir in artifacts/*/; do
           if [ -d "$artifact_dir" ]; then
+            echo "Copying from: $artifact_dir"
             cp -a "${artifact_dir}." "lib/"
           fi
         done
+        echo "=== Final lib structure ==="
+        find lib -type f
 
     - name: Commit and push changes
       run: |

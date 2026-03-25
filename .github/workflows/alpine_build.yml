@@ -30,20 +30,21 @@ jobs:
           -v ${{ github.workspace }}:/workspace \
           -w /workspace \
           alpine:latest /bin/sh -c "
-            apk add --no-cache cmake ninja gcc g++ musl-dev linux-headers git curl-dev
-
+            apk add --no-cache cmake ninja gcc g++ musl-dev linux-headers git
+            
             # Clone Ring Language
-            git clone --branch ${{ inputs.ring-version }} --depth 1 https://github.com/ring-lang/ring.git ring
-
+            git clone --branch ${{ inputs.ring-version }} --depth 1 https://github.com/ringpackages/ringsrc.git ring
+            
             # Build Ring Language
             cd ring/language
             cmake . -DCMAKE_BUILD_TYPE=Release -GNinja
             ninja install
             cd /workspace
-
+            
             # Build ring-ftp lib
-            rm -rf lib
-            cmake . -DCMAKE_BUILD_TYPE=Release -DRING_ROOT=/workspace/ring -DMUSL=ON -GNinja
+            rm -rf build lib
+            mkdir build && cd build
+            cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja -DRING_ROOT=/workspace/ring -DMUSL=ON
             ninja
           "
 

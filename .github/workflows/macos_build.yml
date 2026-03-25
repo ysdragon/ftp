@@ -32,14 +32,16 @@ jobs:
     - name: Checkout Ring Language
       uses: actions/checkout@v4
       with:
-        repository: ring-lang/ring
+        repository: ringpackages/ringsrc
         path: ring
         ref: ${{ inputs.ring-version }}
 
     - name: Build and Install Ring Language
       run: |
         cd ring/language
-        cmake . -DCMAKE_BUILD_TYPE=Release -GNinja
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja
         ninja install
 
     - name: Set RING environment variable
@@ -48,7 +50,9 @@ jobs:
     - name: Build ring-ftp lib
       run: |
         rm -rf lib
-        cmake . -DCMAKE_BUILD_TYPE=Release -GNinja
+        mkdir -p build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja
         ninja
 
     - name: Upload artifacts

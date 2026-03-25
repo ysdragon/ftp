@@ -13,11 +13,11 @@ jobs:
     strategy:
       matrix:
         include:
-        - release: "14.3"
+        - release: "15.0"
           arch: amd64
           arch_name: amd64
           name: freebsd-amd64
-        - release: "14.3"
+        - release: "15.0"
           arch: aarch64
           arch_name: arm64
           name: freebsd-arm64
@@ -26,6 +26,9 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
+
+    - name: Clean lib directory
+      run: rm -rf lib
 
     - name: Build in FreeBSD VM
       id: freebsd_build
@@ -37,11 +40,11 @@ jobs:
         sync: rsync
         mem: 4096
         prepare: |
-          pkg install -y cmake git ninja pkgconf curl
+          pkg install -y cmake git ninja pkgconf
 
         run: |
           # Clone Ring Language
-          git clone --branch ${{ inputs.ring-version }} --depth 1 https://github.com/ring-lang/ring.git ring
+          git clone --branch ${{ inputs.ring-version }} --depth 1 https://github.com/ringpackages/ringsrc.git ring
           cd ring
 
           # Set RING environment variable
@@ -49,14 +52,18 @@ jobs:
 
           # Build and Install Ring Language
           cd language
-          cmake . -DCMAKE_BUILD_TYPE=Release -GNinja
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja
           ninja install
-          cd ../..
+          cd ../../..
 
           rm -rf lib
 
           # Build ring-ftp lib
-          cmake . -DCMAKE_BUILD_TYPE=Release -GNinja
+          mkdir -p build
+          cd build
+          cmake .. -DCMAKE_BUILD_TYPE=Release -GNinja
           ninja
 
     - name: Upload artifacts
