@@ -91,24 +91,81 @@ else()
 	set(LIB_DEST_DIR "${CMAKE_CURRENT_SOURCE_DIR}/lib/${OS_DIR}/${ARCH_DIR}")
 endif()
 
-# Find libcurl
-find_package(CURL REQUIRED)
+# Build wolfSSL and curl from source statically
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
-# Don't build examples from ftpclient
-set(BUILD_EXAMPLES OFF)
+# Fetch and build wolfSSL
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "Build shared libraries" FORCE)
+set(WOLFSSL_OPENSSLEXTRA ON CACHE BOOL "Enable OpenSSL Extra" FORCE)
+set(WOLFSSL_ASM OFF CACHE BOOL "Enable ASM" FORCE)
+set(WOLFSSL_EXAMPLES OFF CACHE BOOL "Build Examples" FORCE)
+set(WOLFSSL_CRYPT_TESTS OFF CACHE BOOL "Build tests" FORCE)
+set(WOLFSSL_CURL ON CACHE BOOL "Enable curl support" FORCE)
+set(WOLFSSL_SYS_CA_CERTS ON CACHE BOOL "Enable system CA certs" FORCE)
 
-# Add ftpclient.h as a subdirectory to build it
-if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/ftpclient/CMakeLists.txt")
-    message(STATUS "ftpclient.h source not found, fetching from GitHub...")
-    FetchContent_Declare(
-        ftpclient
-        GIT_REPOSITORY https://github.com/ysdragon/ftpclient.h
-        GIT_TAG        master
-    )
-    FetchContent_MakeAvailable(ftpclient)
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/wolfssl/CMakeLists.txt")
+    message(STATUS "Adding wolfSSL submodule...")
+    if(NOT MSVC)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
+    endif()
+    add_subdirectory(src/c_src/wolfssl)
+    set(WOLFSSL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/wolfssl" CACHE PATH "" FORCE)
 else()
-    message(STATUS "ftpclient.h found locally, adding as subdirectory.")
-    add_subdirectory(src/c_src/ftpclient)
+    message(STATUS "Fetching wolfSSL...")
+    if(NOT MSVC)
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-error")
+    endif()
+    FetchContent_Declare(wolfssl
+        GIT_REPOSITORY https://github.com/wolfSSL/wolfssl.git
+        GIT_TAG        v5.9.0-stable
+    )
+    FetchContent_MakeAvailable(wolfssl)
+    FetchContent_GetProperties(wolfssl SOURCE_DIR WOLFSSL_SOURCE_DIR)
+    set(WOLFSSL_INCLUDE_DIR "${WOLFSSL_SOURCE_DIR}" CACHE PATH "" FORCE)
+endif()
+
+# Since curl expects find_package(WolfSSL) to succeed, let's mock it
+set(WOLFSSL_LIBRARY wolfssl CACHE STRING "" FORCE)
+
+# Fetch and build cURL
+set(BUILD_CURL_EXE OFF CACHE BOOL "Build curl executable" FORCE)
+set(CURL_USE_LIBPSL OFF CACHE BOOL "Use libpsl" FORCE)
+set(CURL_USE_LIBSSH2 OFF CACHE BOOL "Use libssh2" FORCE)
+set(CURL_USE_LIBSSH OFF CACHE BOOL "Use libssh" FORCE)
+set(USE_LIBIDN2 OFF CACHE BOOL "Use libidn2" FORCE)
+set(CURL_DISABLE_LDAP ON CACHE BOOL "Disable ldap" FORCE)
+set(CURL_DISABLE_LDAPS ON CACHE BOOL "Disable ldaps" FORCE)
+set(CURL_USE_WOLFSSL ON CACHE BOOL "Enable wolfSSL" FORCE)
+set(CURL_USE_OPENSSL OFF CACHE BOOL "Enable OpenSSL" FORCE)
+set(CURL_USE_SCHANNEL OFF CACHE BOOL "Enable Schannel" FORCE)
+set(CURL_USE_SECTRANSP OFF CACHE BOOL "Enable Secure Transport" FORCE)
+set(CURL_ZLIB OFF CACHE BOOL "Enable zlib" FORCE)
+set(CURL_BROTLI OFF CACHE BOOL "Enable brotli" FORCE)
+set(CURL_ZSTD OFF CACHE BOOL "Enable zstd" FORCE)
+set(USE_NGHTTP2 OFF CACHE BOOL "Enable nghttp2" FORCE)
+set(USE_NGTCP2 OFF CACHE BOOL "Enable ngtcp2" FORCE)
+set(USE_QUICHE OFF CACHE BOOL "Enable quiche" FORCE)
+set(CURL_DISABLE_INSTALL ON CACHE BOOL "Disable curl install" FORCE)
+set(BUILD_TESTING OFF CACHE BOOL "Disable tests" FORCE)
+set(CURL_CA_NATIVE ON CACHE BOOL "Use native CA store" FORCE)
+
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/curl/CMakeLists.txt")
+    message(STATUS "Adding cURL submodule...")
+    add_subdirectory(src/c_src/curl)
+else()
+    message(STATUS "Fetching cURL...")
+    FetchContent_Declare(curl
+        GIT_REPOSITORY https://github.com/curl/curl.git
+        GIT_TAG        curl-8_19_0
+    )
+    FetchContent_MakeAvailable(curl)
+endif()
+
+if(TARGET libcurl_static)
+    set(CURL_INCLUDE_DIRS "${curl_SOURCE_DIR}/include" "${curl_BINARY_DIR}/include/curl")
+else()
+    find_package(CURL REQUIRED)
 endif()
 
 # Create the Ring FTP Client extension shared library
@@ -122,10 +179,33 @@ target_include_directories(ring_ftp PRIVATE
     ${CURL_INCLUDE_DIRS}
 )
 
+if(EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/ftpclient/ftpclient.h")
+    target_include_directories(ring_ftp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src/c_src/ftpclient)
+else()
+    # Fetch ftpclient.h if it doesn't exist locally
+    message(STATUS "ftpclient.h source not found locally, fetching from GitHub...")
+    FetchContent_Declare(
+        ftpclient
+        GIT_REPOSITORY https://github.com/ysdragon/ftpclient.h
+        GIT_TAG        master
+    )
+    FetchContent_MakeAvailable(ftpclient)
+    FetchContent_GetProperties(ftpclient SOURCE_DIR FTPCLIENT_SOURCE_DIR)
+    target_include_directories(ring_ftp PRIVATE ${FTPCLIENT_SOURCE_DIR})
+endif()
+
 # Link libraries
+if(TARGET libcurl_static)
+    set(RING_FTP_LIBS libcurl_static wolfssl)
+elseif(TARGET libcurl)
+    set(RING_FTP_LIBS libcurl wolfssl)
+else()
+    set(RING_FTP_LIBS curl wolfssl)
+endif()
+
 target_link_libraries(ring_ftp PRIVATE
 	Ring::Ring
-    ftpclient
+    ${RING_FTP_LIBS}
 )
 
 target_compile_options(ring_ftp PRIVATE
