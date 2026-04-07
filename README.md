@@ -493,7 +493,6 @@ If you wish to contribute to the development of Ring FTP or build it from the so
 
 -   **CMake**: Version 3.16 or higher.
 -   **C Compiler**: A C compiler compatible with your platform (e.g., GCC, Clang, MSVC).
--   **libcurl**: libcurl development libraries with SSL/TLS support.
 -   **[Ring](https://ring-lang.net/) Source Code**: You will need to have the Ring language source code available on your machine.
 
 ### Build Steps
