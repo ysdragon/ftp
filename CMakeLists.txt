@@ -118,7 +118,7 @@ else()
     endif()
     FetchContent_Declare(wolfssl
         GIT_REPOSITORY https://github.com/wolfSSL/wolfssl.git
-        GIT_TAG        v5.9.0-stable
+        GIT_TAG        v5.9.1-stable
     )
     FetchContent_MakeAvailable(wolfssl)
     FetchContent_GetProperties(wolfssl SOURCE_DIR WOLFSSL_SOURCE_DIR)
@@ -157,7 +157,7 @@ else()
     message(STATUS "Fetching cURL...")
     FetchContent_Declare(curl
         GIT_REPOSITORY https://github.com/curl/curl.git
-        GIT_TAG        curl-8_19_0
+        GIT_TAG        curl-8_20_0
     )
     FetchContent_MakeAvailable(curl)
 endif()
